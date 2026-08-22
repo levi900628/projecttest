@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0d13" />
+  <title>Levi — Creative Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="cursor-glow"></div>
+
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar glass">
+      <div class="brand">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>LEVI<span class="muted">.DEV</span></span>
+      </div>
+
+      <nav class="nav">
+        <a href="#home" class="nav-link active"><span>01</span> Home</a>
+        <a href="#work" class="nav-link"><span>02</span> Work</a>
+        <a href="#about" class="nav-link"><span>03</span> About</a>
+        <a href="#stack" class="nav-link"><span>04</span> Stack</a>
+        <a href="#contact" class="nav-link"><span>05</span> Contact</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="status"><i></i> Available for projects</div>
+        <div class="mini-clock" id="clock">00:00:00</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar glass">
+        <div>
+          <span class="eyebrow">PORTFOLIO / 2026</span>
+        </div>
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+        <div class="top-actions">
+          <span class="live-dot"></span>
+          <span>System online</span>
+        </div>
+      </header>
+
+      <section id="home" class="hero section">
+        <div class="hero-copy reveal">
+          <div class="pill"><span></span> Creative Developer</div>
+          <h1>Building digital<br><em>things that move.</em></h1>
+          <p class="hero-text">
+            Frontend, game development, automation, and experimental interfaces.
+            I like turning unnecessarily complicated ideas into interfaces that actually work.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#work">Explore work <span>↗</span></a>
+            <a class="btn secondary" href="#contact">Contact me</a>
+          </div>
+        </div>
+
+        <div class="hero-card glass reveal tilt">
+          <div class="card-top">
+            <span>01 / PROFILE</span>
+            <span class="tiny">LIVE</span>
+          </div>
+          <div class="avatar">
+            <div class="avatar-ring"></div>
+            <span>&lt;/&gt;</span>
+          </div>
+          <h2>Levi</h2>
+          <p>Developer · Designer · Builder</p>
+          <div class="metric-row">
+            <div><strong>10+</strong><small>Languages</small></div>
+            <div><strong>∞</strong><small>Ideas</small></div>
+            <div><strong>24/7</strong><small>Debugging</small></div>
+          </div>
+          <div class="terminal-line"><span>›</span> npm run create-something</div>
+        </div>
+      </section>
+
+      <section id="work" class="section">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">SELECTED WORK</span>
+            <h2>Projects that survived<br>the debugging phase.</h2>
+          </div>
+          <span class="section-index">02</span>
+        </div>
+
+        <div class="project-grid">
+          <article class="project glass reveal tilt">
+            <div class="project-image project-one">
+              <span class="project-number">01</span>
+              <div class="project-symbol">AI</div>
+            </div>
+            <div class="project-body">
+              <div class="project-meta"><span>AI / WEB</span><span>2026</span></div>
+              <h3>Paww AI</h3>
+              <p>Experimental AI interface focused on creative image workflows.</p>
+              <div class="tags"><span>JavaScript</span><span>AI</span><span>UI/UX</span></div>
+            </div>
+          </article>
+
+          <article class="project glass reveal tilt">
+            <div class="project-image project-two">
+              <span class="project-number">02</span>
+              <div class="project-symbol">BOT</div>
+            </div>
+            <div class="project-body">
+              <div class="project-meta"><span>AUTOMATION</span><span>2026</span></div>
+              <h3>Telegram Automation</h3>
+              <p>Command-driven automation with async flows, media handling, and modular services.</p>
+              <div class="tags"><span>Node.js</span><span>GramJS</span><span>FFmpeg</span></div>
+            </div>
+          </article>
+
+          <article class="project glass reveal tilt">
+            <div class="project-image project-three">
+              <span class="project-number">03</span>
+              <div class="project-symbol">GAME</div>
+            </div>
+            <div class="project-body">
+              <div class="project-meta"><span>GAME DEV</span><span>LAB</span></div>
+              <h3>Gourmet Hunter</h3>
+              <p>Fantasy game concept where monsters become ingredients and cooking becomes combat.</p>
+              <div class="tags"><span>Unreal</span><span>C++</span><span>Design</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="section split">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">ABOUT</span>
+            <h2>Curious enough<br>to break things.</h2>
+          </div>
+          <span class="section-index">03</span>
+        </div>
+
+        <div class="about-panel glass reveal">
+          <p class="large">
+            I build software because apparently making normal life unnecessarily technical
+            is a perfectly reasonable hobby.
+          </p>
+          <p>
+            My focus sits between frontend engineering, creative coding, automation,
+            and game development. I care about motion, interaction, performance, and
+            interfaces that feel alive without becoming a fireworks accident.
+          </p>
+          <div class="about-stats">
+            <div><strong data-count="10">0</strong><span>Languages explored</span></div>
+            <div><strong data-count="30">0</strong><span>Ideas in orbit</span></div>
+            <div><strong data-count="100">0</strong><span>% Curiosity</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="stack" class="section">
+        <div class="section-heading reveal">
+          <div>
+            <span class="eyebrow">TECH STACK</span>
+            <h2>The toolbox.</h2>
+          </div>
+          <span class="section-index">04</span>
+        </div>
+
+        <div class="stack-grid">
+          <div class="stack-card glass reveal"><span>01</span><b>JavaScript</b><small>Node.js · Browser</small></div>
+          <div class="stack-card glass reveal"><span>02</span><b>TypeScript</b><small>Clean architecture</small></div>
+          <div class="stack-card glass reveal"><span>03</span><b>C++ / C#</b><small>Game development</small></div>
+          <div class="stack-card glass reveal"><span>04</span><b>HTML / CSS</b><small>Interactive UI</small></div>
+          <div class="stack-card glass reveal"><span>05</span><b>Python</b><small>Automation · tooling</small></div>
+          <div class="stack-card glass reveal"><span>06</span><b>FFmpeg</b><small>Media pipelines</small></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="contact-card glass reveal">
+          <div>
+            <span class="eyebrow">05 / CONTACT</span>
+            <h2>Have a weird idea?<br>Good. Those are usually fun.</h2>
+          </div>
+          <a class="btn primary" href="mailto:hello@example.com">Start a conversation ↗</a>
+        </div>
+      </section>
+
+      <footer>
+        <span>© 2026 Levi.dev</span>
+        <span>Built with HTML · CSS · JS</span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
