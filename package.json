@@ -1,0 +1,14 @@
+
+{
+  "name": "harvey",
+  "version": "1.0.0",
+  "description": "Harvey api",
+  "main": "api/card.js",
+  "scripts": {
+    "start": "node api/card.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "sharp": "^0.33.5"
+  }
+}
