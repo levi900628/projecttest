@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#381c45"/>
+    <stop offset="1" stop-color="#a64c86"/>
+  </linearGradient>
+  <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ffc4ed"/>
+    <stop offset="1" stop-color="#ff86bb"/>
+  </linearGradient>
+</defs>
+<rect width="900" height="900" rx="44" fill="url(#bg)"/>
+<circle cx="760" cy="130" r="180" fill="#ffc4ed" opacity=".13"/>
+<circle cx="120" cy="780" r="240" fill="#ff86bb" opacity=".10"/>
+<path d="M0 630 Q220 480 430 650 T900 590 V900 H0Z" fill="#210f2d" opacity=".42"/>
+<path d="M560 0 L900 0 L900 340Z" fill="url(#accent)" opacity=".18"/>
+<text x="72" y="105" fill="#ffd4f1" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="7">NEW ARRIVAL</text>
+<text x="72" y="190" fill="#ffffff" font-family="Arial,sans-serif" font-size="76" font-weight="800">WELCOME</text>
+<text x="76" y="235" fill="#f7d8ef" font-family="Arial,sans-serif" font-size="25">A new face has joined the group</text>
+<rect x="84" y="269" width="327" height="327" rx="28" fill="#ffffff"/>
+<rect x="90" y="275" width="315" height="315" rx="22" fill="#f7eaf4"/>
+<rect x="72" y="635" width="756" height="3" rx="2" fill="#ffc4ed" opacity=".75"/>
+<text x="72" y="700" fill="#ffffff" font-family="Arial,sans-serif" font-size="31" font-weight="700">MAKE YOURSELF AT HOME</text>
+<text x="72" y="748" fill="#f7d8ef" font-family="Arial,sans-serif" font-size="23">Good people. Good conversations.</text>
+<circle cx="790" cy="790" r="8" fill="#ffc4ed"/>
+<circle cx="818" cy="790" r="8" fill="#ffc4ed" opacity=".6"/>
+<circle cx="846" cy="790" r="8" fill="#ffc4ed" opacity=".3"/>
+</svg>
