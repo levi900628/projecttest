@@ -75,8 +75,9 @@ module.exports = async (req, res) => {
       });
     }
 
-    const templateName =
-      gender === "cewek" ? "women.webp" : "men.webp";
+    const templateName = Math.random() < 0.5
+  ? "women.webp"
+  : "men.webp";
 
     const templatePath = path.join(
       process.cwd(),
