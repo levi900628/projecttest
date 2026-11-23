@@ -88,19 +88,21 @@ module.exports = async (req, res) => {
 
     const size = 315;
 
-    const avatarImage = await sharp(avatarBuffer)
-      .resize(size, size, { fit: "cover" })
-      .webp()
-      .toBuffer();
+    const size = 315;
 
-    const output = await sharp(templatePath)
-      .composite([{
-        input: avatarImage,
-        left: 90,
-        top: 275
-      }])
-      .webp()
-      .toBuffer();
+const avatarImage = await sharp(avatarBuffer)
+  .resize(size, size, { fit: "cover" })
+  .webp()
+  .toBuffer();
+
+const output = await sharp(templatePath)
+  .composite([{
+    input: avatarImage,
+    left: 90,
+    top: 275
+  }])
+  .webp()
+  .toBuffer();
 
     res.setHeader("Content-Type", "image/webp");
     res.setHeader("Cache-Control", "no-store");
