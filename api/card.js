@@ -2,128 +2,155 @@ const sharp = require("sharp");
 const fs = require("fs/promises");
 const path = require("path");
 
-const ALLOWED_AVATAR_HOSTS = new Set([
-    "pps.whatsapp.net",
-    "mmg.whatsapp.net"
-]);
-
-function sendError(res, status, message) {
-    res.setHeader("Content-Type", "application/json; charset=utf-8");
-    return res.status(status).json({ error: message });
-}
-
 module.exports = async (req, res) => {
-    try {
-        if (req.method !== "GET") {
-            res.setHeader("Allow", "GET");
-            return sendError(res, 405, "Method not allowed");
-        }
-
-        const rawAvatar = req.query.avatar;
-        const requestedTemplate = req.query.template;
-        const template = ["men", "women"].includes(requestedTemplate)
-            ? requestedTemplate
-            : (Math.random() < 0.5 ? "men" : "women");
-
-        const templatePath = path.join(
-            process.cwd(),
-            "api",
-            "welcome",
-            `${template}.svg`
-        );
-
-        const templateBuffer = await fs.readFile(templatePath);
-
-        // Tanpa avatar, tetap mengembalikan template agar halaman tidak kosong.
-        if (rawAvatar === undefined || rawAvatar === "") {
-            const output = await sharp(templateBuffer).webp().toBuffer();
-            res.setHeader("Content-Type", "image/webp");
-            res.setHeader("Cache-Control", "no-store, max-age=0");
-            return res.status(200).send(output);
-        }
-
-        if (typeof rawAvatar !== "string") {
-            return sendError(res, 400, "Avatar tidak valid");
-        }
-
-        let avatarUrl;
-        try {
-            avatarUrl = new URL(rawAvatar);
-        } catch {
-            return sendError(res, 400, "URL avatar tidak valid");
-        }
-
-        if (
-            avatarUrl.protocol !== "https:" ||
-            !ALLOWED_AVATAR_HOSTS.has(avatarUrl.hostname)
-        ) {
-            return sendError(res, 400, "URL avatar tidak diizinkan");
-        }
-
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 6000);
-        let response;
-
-        try {
-            response = await fetch(avatarUrl.href, {
-                signal: controller.signal,
-                redirect: "error",
-                headers: {
-                    "User-Agent": "WelcomeCard/1.0"
-                }
-            });
-        } finally {
-            clearTimeout(timeout);
-        }
-
-        if (!response.ok) {
-            return sendError(res, 502, "Gagal mengambil foto profil");
-        }
-
-        const contentType = response.headers.get("content-type") || "";
-        if (!contentType.toLowerCase().startsWith("image/")) {
-            return sendError(res, 415, "Respons avatar bukan gambar");
-        }
-
-        const contentLength = Number(response.headers.get("content-length") || 0);
-        if (contentLength > 5 * 1024 * 1024) {
-            return sendError(res, 413, "Foto profil terlalu besar");
-        }
-
-        const avatarBuffer = Buffer.from(await response.arrayBuffer());
-        if (avatarBuffer.length === 0 || avatarBuffer.length > 5 * 1024 * 1024) {
-            return sendError(res, 413, "Ukuran foto profil tidak valid");
-        }
-
-        const size = 291;
-        const avatarImage = await sharp(avatarBuffer, {
-            failOn: "error",
-            limitInputPixels: 20_000_000
-        })
-            .rotate()
-            .resize(size, size, {
-                fit: "cover",
-                position: "centre"
-            })
-            .webp()
-            .toBuffer();
-
-        // Bingkai putih pada template berukuran 315x315, foto dipasang di tengahnya.
-        const output = await sharp(templateBuffer)
-            .composite([{
-                input: avatarImage,
-                left: 102,
-                top: 287
-            }])
-            .webp()
-            .toBuffer();
-
-        res.setHeader("Content-Type", "image/webp");
-        res.setHeader("Cache-Control", "no-store, max-age=0");
-        res.setHeader("X-Content-Type-Options", "nosniff");
-        return res.status(200).send(output);
-    } catch (err) {
-        console.error("[WELCOME CARD ERROR]", err);
-        return sendError(res, 500, "Gagal membuat welcome card");
+  try {
+    if (req.method !== "GET") {
+      res.setHeader("Allow", "GET");
+      return res.status(405).json({
+        error: "Method not allowed"
+      });
     }
+
+    const { avatar } = req.query;
+    let { gender } = req.query;
+
+    if (!avatar) {
+      return res.status(400).json({
+        error: "Parameter avatar wajib diisi"
+      });
+    }
+
+    // Validasi URL foto profil WhatsApp
+    let avatarUrl;
+
+    try {
+      avatarUrl = new URL(avatar);
+    } catch {
+      return res.status(400).json({
+        error: "URL avatar tidak valid"
+      });
+    }
+
+    const allowedHosts = [
+      "pps.whatsapp.net",
+      "mmg.whatsapp.net"
+    ];
+
+    if (
+      avatarUrl.protocol !== "https:" ||
+      !allowedHosts.includes(avatarUrl.hostname)
+    ) {
+      return res.status(400).json({
+        error: "URL avatar tidak diizinkan"
+      });
+    }
+
+    // Pilih template SVG asli
+    const normalizedGender = String(gender || "").toLowerCase();
+
+    if (["male", "man", "cowok", "laki-laki"].includes(normalizedGender)) {
+      gender = "men";
+    } else if (
+      ["female", "woman", "cewek", "perempuan"].includes(normalizedGender)
+    ) {
+      gender = "women";
+    } else {
+      gender = Math.random() < 0.5 ? "men" : "women";
+    }
+
+    const templatePath = path.join(
+      process.cwd(),
+      "api",
+      "welcome",
+      `${gender}.svg`
+    );
+
+    // Baca SVG dari folder milik lu, bukan template manual
+    const templateBuffer = await fs.readFile(templatePath);
+    const metadata = await sharp(templateBuffer).metadata();
+
+    if (!metadata.width || !metadata.height) {
+      throw new Error("Ukuran template SVG tidak valid");
+    }
+
+    // Ambil avatar
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
+    let response;
+
+    try {
+      response = await fetch(avatarUrl.href, {
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (!response.ok) {
+      return res.status(502).json({
+        error: "Gagal mengambil foto profil"
+      });
+    }
+
+    const contentType =
+      response.headers.get("content-type") || "";
+
+    if (!contentType.startsWith("image/")) {
+      return res.status(400).json({
+        error: "Avatar bukan gambar"
+      });
+    }
+
+    const avatarBuffer = Buffer.from(
+      await response.arrayBuffer()
+    );
+
+    if (
+      avatarBuffer.length === 0 ||
+      avatarBuffer.length > 5 * 1024 * 1024
+    ) {
+      return res.status(413).json({
+        error: "Ukuran avatar tidak valid atau terlalu besar"
+      });
+    }
+
+    // Posisi kotak avatar pada desain SVG 700 × 700.
+    // Sesuaikan kalau ukuran atau posisi kotak di SVG lu berbeda.
+    const scale = metadata.width / 700;
+    const size = Math.round(291 * scale);
+    const left = Math.round(102 * scale);
+    const top = Math.round(287 * scale);
+
+    const avatarImage = await sharp(avatarBuffer)
+      .resize(size, size, {
+        fit: "cover",
+        position: "centre"
+      })
+      .png()
+      .toBuffer();
+
+    // Tempelkan avatar di atas template SVG asli
+    const output = await sharp(templateBuffer)
+      .composite([
+        {
+          input: avatarImage,
+          left,
+          top
+        }
+      ])
+      .webp()
+      .toBuffer();
+
+    res.setHeader("Content-Type", "image/webp");
+    res.setHeader("Cache-Control", "no-store");
+
+    return res.status(200).send(output);
+  } catch (err) {
+    console.error("[CARD ERROR]", err);
+
+    return res.status(500).json({
+      error: "Gagal membuat welcome card"
+    });
+  }
 };
