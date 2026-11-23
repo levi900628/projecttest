@@ -57,14 +57,12 @@ module.exports = async (req, res) => {
     } else {
       gender = Math.random() < 0.5 ? "men" : "women";
     }
-
     const templatePath = path.join(
-      process.cwd(),
-      "api",
-      "welcome",
-      `${gender}.svg`
-    );
-
+  process.cwd(),
+  "public",
+  "welcome",
+  `${gender}.svg`
+);
     // Baca SVG dari folder milik lu, bukan template manual
     const templateBuffer = await fs.readFile(templatePath);
     const metadata = await sharp(templateBuffer).metadata();
