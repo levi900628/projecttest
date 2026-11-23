@@ -8,44 +8,64 @@ module.exports = async (req, res) => {
         }
 
         const avatar = req.query.avatar;
+        let validAvatar = null;
 
-        if (typeof avatar !== "string" || !avatar) {
-            return res.status(400).send("Avatar wajib diisi");
+        if (avatar !== undefined && avatar !== "") {
+            if (typeof avatar !== "string") {
+                return res.status(400).send("Avatar tidak valid");
+            }
+
+            let parsedAvatar;
+
+            try {
+                parsedAvatar = new URL(avatar);
+            } catch {
+                return res.status(400).send("URL avatar tidak valid");
+            }
+
+            const allowedHosts = [
+                "pps.whatsapp.net",
+                "mmg.whatsapp.net"
+            ];
+
+            if (
+                parsedAvatar.protocol !== "https:" ||
+                !allowedHosts.includes(parsedAvatar.hostname)
+            ) {
+                return res.status(400).send("Avatar tidak diizinkan");
+            }
+
+            validAvatar = parsedAvatar.href;
         }
 
-        let avatarUrl;
-
-        try {
-            avatarUrl = new URL(avatar);
-        } catch {
-            return res.status(400).send("URL avatar tidak valid");
-        }
-
-        const allowedHosts = [
-            "pps.whatsapp.net",
-            "mmg.whatsapp.net"
-        ];
-
-        if (
-            avatarUrl.protocol !== "https:" ||
-            !allowedHosts.includes(avatarUrl.hostname)
-        ) {
-            return res.status(400).send("Avatar tidak diizinkan");
-        }
+        const template = Math.random() < 0.5
+            ? "women"
+            : "men";
 
         const cardUrl = new URL("/api/card", SITE_URL);
-        cardUrl.searchParams.set("avatar", avatar);
+        cardUrl.searchParams.set("template", template);
 
-        const escapeHtml = (value) =>
-            value.replace(/&/g, "&amp;")
+        if (validAvatar) {
+            cardUrl.searchParams.set("avatar", validAvatar);
+        }
+
+        const pageUrl = new URL("/api/intro", SITE_URL);
+
+        if (validAvatar) {
+            pageUrl.searchParams.set("avatar", validAvatar);
+        }
+
+        pageUrl.searchParams.set("template", template);
+
+        const escapeHtml = value =>
+            String(value)
+                .replace(/&/g, "&amp;")
                 .replace(/"/g, "&quot;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;");
 
         const imageUrl = escapeHtml(cardUrl.href);
-        const pageUrl = escapeHtml(
-            `${SITE_URL}/api/intro?avatar=${encodeURIComponent(avatar)}`
-        );
+        const canonicalUrl = escapeHtml(pageUrl.href);
 
         res.setHeader("Content-Type", "text/html; charset=utf-8");
         res.setHeader("Cache-Control", "no-store");
@@ -57,19 +77,18 @@ module.exports = async (req, res) => {
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Welcome</title>
-    <meta name="description" content="A new member has joined the group.">
-
+    <meta name="description" content="Welcome card anggota baru.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Welcome">
-    <meta property="og:description" content="A new member has joined the group.">
-    <meta property="og:url" content="${pageUrl}">
+    <meta property="og:description" content="Welcome card anggota baru.">
+    <meta property="og:url" content="${canonicalUrl}">
     <meta property="og:image" content="${imageUrl}">
     <meta property="og:image:alt" content="Welcome card">
     <meta property="og:image:type" content="image/webp">
-
+    <meta property="og:image:width" content="900">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Welcome">
-    <meta name="twitter:description" content="A new member has joined the group.">
+    <meta name="twitter:description" content="Welcome card anggota baru.">
     <meta name="twitter:image" content="${imageUrl}">
 
     <style>
@@ -103,7 +122,7 @@ module.exports = async (req, res) => {
 <body>
     <main>
         <h1>Welcome</h1>
-        <p>A new member has joined the group.</p>
+        <p>Welcome card anggota baru.</p>
         <img src="${imageUrl}" alt="Welcome card">
     </main>
 </body>
