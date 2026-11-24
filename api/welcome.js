@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     // Tentukan background berdasarkan gender
     const isCewe = String(gender).toLowerCase().includes('cewe');
     const bgUrl = isCewe 
-      ? 'https://raw.githubusercontent.com/levi900628/projecttest/main/assets/welcome-cewek.webp'
+      ? 'https://raw.githubusercontent.com/levi900628/projecttest/main/assets/welcome-cewek.jpg'
       : 'https://raw.githubusercontent.com/levi900628/projecttest/main/assets/welcome-cowok.jpg';
 
     // Buat canvas berukuran 1536x865
